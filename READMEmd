@@ -1,0 +1,19 @@
+# ticket-2679
+
+Bon, de waarnemingen kloppen inderdaad.
+
+Op de login node krijg je voor elke oproep van def OneThread_minimal_calc dezelfde
+resultaten en op mijn laptop niet. De reden is dat numpy.random.get_state() op alle
+processen dezelfde is op de login node maar niet op mijn laptop. Met dezelfde state
+van de random number generator worden uiteraard dezelfde random numbers gegenereerd.
+Nochtans initialiseert numpy  zowel op de login node als op mijn laptop de random number
+generator verschillend bij elke nieuwe run. Vermoedelijk gebruikt ie een tijdsafhankelijke
+seed. Mijn conclusie is dat multiprocessing iets verschillends doet op de login node en
+mijn laptop.
+
+Zou het kunnen dat op de login node een copie gemaakt wordt van de processen (zodat ze
+dus allemaal dezelfde state meekrijgen) en op de laptop elk process apart geinitieerd
+wordt (zodat elk process zijn eigen random number generator initialiseert met een andere
+seed)?
+
+see also: https://stackoverflow.com/questions/12915177/same-output-in-different-workers-in-multiprocessing
