@@ -31,8 +31,10 @@ print(np.shape(loaded_results))
 ############################################################################
 # 3: check if different thread results are independent/different
 ############################################################################
-
-print(loaded_results[0] == loaded_results[4])
+print('results')
+print(loaded_results[0][0] == loaded_results[4][0])
+print('states')
+print(np.all(loaded_results[0][1][1] == loaded_results[4][1][1]))
 
 
 # This should give [False False False ....] if the thread did independent calculations, but it gives [True True True ...]

@@ -61,6 +61,7 @@ def OneThread_minimal_calc(dummy, N_samples):
     """ Runs minimal sampling computation on a single thread. """
 
     print("ET: OneThread_minimal_calc() running on", mp.current_process()) # ET
+    state = np.random.get_state()
     thread_result = np.zeros(N_samples)
     
     for i_sample in range(N_samples):
@@ -70,7 +71,7 @@ def OneThread_minimal_calc(dummy, N_samples):
         thread_result[i_sample] = a_sample
 
     print(f"ET: {mp.current_process()}\n{thread_result}") # ET
-    return thread_result
+    return thread_result, state
 
 
 
@@ -97,7 +98,7 @@ if __name__ == '__main__':
     print("ET: __main__ running on", mp.current_process())  # ET
     print("ET: N_tasks =", N_tasks)
     results = pool.map(OneThread_minimal_calc_process, range(N_tasks), chunksize=1)
-   
+
     # -----------  
     # Close pool:
     # -----------  
