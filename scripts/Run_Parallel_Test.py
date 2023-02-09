@@ -33,10 +33,11 @@ import time
 # Number of simulations and parallellism:
 # -----------
 N_tot = 1000                                        # Total number of calculations
+### ET: make sure that poolsize is set independently of where we are running
 try:
-    poolsize = int(os.environ['SLURM_CPUS_PER_TASK'])   # Slurm HPC
+    poolsize = int(os.environ['SLURM_CPUS_PER_TASK'])   # Slurm HPC, i.e. compute node
 except KeyError:
-    poolsize = mp.cpu_count()                           # Local PC
+    poolsize = mp.cpu_count()                           # Local PC or login node
 
 N_tasks = poolsize                                  # Each task is sent to a worker (thread) for completion.
 N_per_thread = int(np.ceil(N_tot / N_tasks))
@@ -59,6 +60,7 @@ f.close()
 def OneThread_minimal_calc(dummy, N_samples):
     """ Runs minimal sampling computation on a single thread. """
 
+    print("ET: OneThread_minimal_calc() running on", mp.current_process()) # ET
     thread_result = np.zeros(N_samples)
     
     for i_sample in range(N_samples):
@@ -86,10 +88,13 @@ if __name__ == '__main__':
     # Open parallel pool:
     # -----------         
     pool = mp.Pool(poolsize)
+    print(f"ET: {pool=}")
 
     # ----------- 
     # Run samplings in parallel:
     # ----------- 
+    print("ET: __main__ running on", mp.current_process())  # ET
+    print("ET: N_tasks =", N_tasks)
     results = pool.map(OneThread_minimal_calc_process, range(N_tasks), chunksize=1)
    
     # -----------  
