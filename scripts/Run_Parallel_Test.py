@@ -69,6 +69,7 @@ def OneThread_minimal_calc(dummy, N_samples):
         
         thread_result[i_sample] = a_sample
 
+    print(f"ET: {mp.current_process()}\n{thread_result}") # ET
     return thread_result
 
 
